@@ -181,7 +181,8 @@ def send_queued_message(queued_message, smtp_connection=None, blacklist=None,
             result = constants.RESULT_SENT
         except (SocketError, smtplib.SMTPSenderRefused,
                 smtplib.SMTPRecipientsRefused,
-                smtplib.SMTPAuthenticationError), err:
+                smtplib.SMTPAuthenticationError,
+                UnicodeEncodeError), err:
             queued_message.defer()
             logger.warning("Message to %s deferred due to failure: %s" %
                             (message.to_address.encode("utf-8"), err))
@@ -208,7 +209,7 @@ def send_message(email_message, smtp_connection=None):
     connection can be provided. Otherwise an SMTP connection will be opened
     to send this message.
 
-    This function does not perform any logging or queueing.
+    This function does not perform any queueing.
 
     """
     if smtp_connection is None:
@@ -223,9 +224,11 @@ def send_message(email_message, smtp_connection=None):
         result = constants.RESULT_SENT
     except (SocketError, smtplib.SMTPSenderRefused,
             smtplib.SMTPRecipientsRefused,
-            smtplib.SMTPAuthenticationError):
+            smtplib.SMTPAuthenticationError,
+            UnicodeEncodeError), err:
         result = constants.RESULT_FAILED
-
+        logger.warning("Message from %s failed due to: %s" %
+                            (email_message.from_email, err))
     if opened_connection:
         smtp_connection.close()
     return result

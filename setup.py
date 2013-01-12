@@ -1,4 +1,8 @@
-from distutils.core import setup
+#!/usr/bin/env python
+# encoding: utf-8
+# ----------------------------------------------------------------------------
+
+from setuptools import setup
 from django_mailer import get_version
 
 
@@ -6,11 +10,11 @@ setup(
     name='django-mailer-2',
     version=get_version(),
     description=("A reusable Django app for queueing the sending of email "
-                 "(forked from James Tauber's django-mailer)"),
+                 "(forked aaloy on a frok from James Tauber's django-mailer)"),
     long_description=open('docs/usage.txt').read(),
-    author='Chris Beaven',
-    author_email='smileychris@gmail.com',
-    url='http://github.com/SmileyChris/django-mailer-2',
+    author='Antoni Aloy',
+    author_email='antoni.aloy@gmail.com',
+    url='http://github.com/APSL/django-mailer-2',
     packages=[
         'django_mailer',
         'django_mailer.management',

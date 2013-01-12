@@ -1,7 +1,11 @@
+#!/usr/bin/env python
+# encoding: utf-8
+# ----------------------------------------------------------------------------
+
 from django.conf import settings as django_settings
 from django.core import mail
 from django_mailer import models, constants, queue_email_message
-from django_mailer.tests.base import MailerTestCase
+from base import MailerTestCase
 
 
 class TestBackend(MailerTestCase):
@@ -43,39 +47,71 @@ class TestBackend(MailerTestCase):
                         from_email='mail_from@abc.com', to=['mail_to@abc.com'],
                         headers={'X-Mail-Queue-Priority': 'high'})
         self.send_message(msg)
-        
+
         # low priority message
         msg = mail.EmailMessage(subject='subject', body='body',
                         from_email='mail_from@abc.com', to=['mail_to@abc.com'],
                         headers={'X-Mail-Queue-Priority': 'low'})
         self.send_message(msg)
-        
+
         # normal priority message
         msg = mail.EmailMessage(subject='subject', body='body',
                         from_email='mail_from@abc.com', to=['mail_to@abc.com'],
                         headers={'X-Mail-Queue-Priority': 'normal'})
         self.send_message(msg)
-        
+
         # normal priority message (no explicit priority header)
         msg = mail.EmailMessage(subject='subject', body='body',
                         from_email='mail_from@abc.com', to=['mail_to@abc.com'])
         self.send_message(msg)
-        
+
         qs = models.QueuedMessage.objects.high_priority()
         self.assertEqual(qs.count(), 1)
         queued_message = qs[0]
         self.assertEqual(queued_message.priority, constants.PRIORITY_HIGH)
-        
+
         qs = models.QueuedMessage.objects.low_priority()
         self.assertEqual(qs.count(), 1)
         queued_message = qs[0]
         self.assertEqual(queued_message.priority, constants.PRIORITY_LOW)
-        
+
         qs = models.QueuedMessage.objects.normal_priority()
         self.assertEqual(qs.count(), 2)
         for queued_message in qs:
             self.assertEqual(queued_message.priority,
                              constants.PRIORITY_NORMAL)
+
+    def testUnicodeQueuedMessage(self):
+        """
+        Checks that we capture unicode errors on mail
+        """
+        from django.core.management import call_command
+        msg = mail.EmailMessage(subject='subject', body='body',
+                        from_email=u'juan.lópez@abc.com', to=['mail_to@abc.com'],
+                        headers={'X-Mail-Queue-Priority': 'normal'})
+        self.send_message(msg)
+        queued_messages = models.QueuedMessage.objects.all()
+        self.assertEqual(queued_messages.count(), 1)
+        call_command('send_mail', verbosity='0')
+        num_errors = models.Log.objects.filter(result=constants.RESULT_FAILED).count()
+        self.assertEqual(num_errors, 1)
+
+    def testUnicodePriorityMessage(self):
+        """
+        Checks that we capture unicode errors on mail on priority.
+        It's hard to check as by definiton priority email does not Logs its
+        contents.
+        """
+        from django.core.management import call_command
+        msg = mail.EmailMessage(subject=u'á subject', body='body',
+                        from_email=u'juan.lópez@abc.com', to=['únñac@abc.com'],
+                        headers={'X-Mail-Queue-Priority': 'now'})
+        self.send_message(msg)
+        queued_messages = models.QueuedMessage.objects.all()
+        self.assertEqual(queued_messages.count(), 0)
+        call_command('send_mail', verbosity='0')
+        num_errors = models.Log.objects.filter(result=constants.RESULT_FAILED).count()
+        self.assertEqual(num_errors, 0)
 
     def testSendMessageNowPriority(self):
         # NOW priority message
@@ -86,4 +122,3 @@ class TestBackend(MailerTestCase):
 
         queued_messages = models.QueuedMessage.objects.all()
         self.assertEqual(queued_messages.count(), 0)
-        self.assertEqual(len(mail.outbox), 1)

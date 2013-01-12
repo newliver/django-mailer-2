@@ -32,7 +32,8 @@ class QueuedMessage(MessageRelatedModelAdmin):
     not_deferred.boolean = True
     not_deferred.admin_order_field = 'deferred'
 
-    list_display = ('id', 'message__to_address', 'message__subject',
+    list_display = ('id', 'message__from_address','message__to_address',
+                    'message__subject',
                     'message__date_created', 'priority', 'not_deferred')
 
 
