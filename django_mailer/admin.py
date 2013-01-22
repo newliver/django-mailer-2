@@ -18,7 +18,7 @@ class MessageRelatedModelAdmin(admin.ModelAdmin):
     message__to_address.admin_order_field = 'message__to_address'
 
     def message__from_address(self, obj):
-        return obje.message.from_address
+        return obj.message.from_address
     message__from_address.admin_order_field='message__from_address'
 
     def message__subject(self, obj):
