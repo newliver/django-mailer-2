@@ -1,3 +1,8 @@
 django-mailer-2 by Chris Beaven (a fork of James Tauber's django-mailer)
 
 A reusable Django app for queuing the sending of email
+
+Execute runtests.py to run the test. You'll need a working mail server 
+or just 
+
+python -m smtpd -n -c DebuggingServer localhost:1025
