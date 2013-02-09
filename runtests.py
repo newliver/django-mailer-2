@@ -9,9 +9,7 @@ parent = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, parent)
 os.environ['DJANGO_SETTINGS_MODULE'] = 'django_mailer.testapp.settings'
 
-from django.conf import settings
 from django.test.simple import DjangoTestSuiteRunner
-from django.utils.functional import empty
 
 
 def runtests(*test_args):
