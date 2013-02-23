@@ -1,6 +1,10 @@
+#!/usr/bin/env python
+# encoding: utf-8
+# ----------------------------------------------------------------------------
+
 import logging
 
-VERSION = (1, 2, 1)
+VERSION = (1, 2, 2)
 
 logger = logging.getLogger('django_mailer')
 logger.setLevel(logging.DEBUG)
@@ -49,7 +53,7 @@ def mail_admins(subject, message, fail_silently=False, priority=None):
     """
     from django.conf import settings as django_settings
     from django.utils.encoding import force_unicode
-    from django_mailer import constants, settings
+    from django_mailer import settings
 
     if priority is None:
         settings.MAIL_ADMINS_PRIORITY
