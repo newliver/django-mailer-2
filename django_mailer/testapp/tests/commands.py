@@ -71,8 +71,10 @@ class TestCommands(MailerTestCase):
         """
         today = datetime.date.today()
         self.assertEqual(models.Message.objects.count(), 0)
+        #new message (not to be deleted)
         models.Message.objects.create()
         prev = today - datetime.timedelta(31)
+        # new message (old)
         models.Message.objects.create(date_created=prev)
         call_command('cleanup_mail', days=30)
         self.assertEqual(models.Message.objects.count(), 1)

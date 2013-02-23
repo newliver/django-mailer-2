@@ -1,3 +1,7 @@
+#!/usr/bin/env python
+# encoding: utf-8
+# ----------------------------------------------------------------------------
+
 from django.core.management.base import NoArgsCommand
 from django_mailer import models
 from django_mailer.management.commands import create_handler

@@ -1,3 +1,7 @@
+#!/usr/bin/env python
+# encoding: utf-8
+# ----------------------------------------------------------------------------
+
 import datetime
 import logging
 from optparse import make_option
@@ -9,7 +13,7 @@ from django_mailer.models import Message
 
 
 class Command(BaseCommand):
-    help = 'Place deferred messages back in the queue.'
+    help = 'Delete the mails created before -d days (default 90)'
     option_list = BaseCommand.option_list + (
         make_option('-d', '--days', type='int', default=90,
             help="Cleanup mails older than this many days, defaults to 90."),

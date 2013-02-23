@@ -1,3 +1,7 @@
+#!/usr/bin/env python
+# encoding: utf-8
+# ----------------------------------------------------------------------------
+
 from django.db import models
 from django_mailer import constants, managers
 import datetime
@@ -19,12 +23,12 @@ RESULT_CODES = (
 class Message(models.Model):
     """
     An email message.
-    
+
     The ``to_address``, ``from_address`` and ``subject`` fields are merely for
     easy of access for these common values. The ``encoded_message`` field
     contains the entire encoded email message ready to be sent to an SMTP
     connection.
-    
+
     """
     to_address = models.CharField(max_length=200)
     from_address = models.CharField(max_length=200)
@@ -43,10 +47,10 @@ class Message(models.Model):
 class QueuedMessage(models.Model):
     """
     A queued message.
-    
+
     Messages in the queue can be prioritised so that the higher priority
     messages are sent first (secondarily sorted by the oldest message).
-    
+
     """
     message = models.OneToOneField(Message, editable=False)
     priority = models.PositiveSmallIntegerField(choices=PRIORITIES,
@@ -68,10 +72,10 @@ class QueuedMessage(models.Model):
 class Blacklist(models.Model):
     """
     A blacklisted email address.
-    
+
     Messages attempted to be sent to e-mail addresses which appear on this
     blacklist will be skipped entirely.
-    
+
     """
     email = models.EmailField(max_length=200)
     date_added = models.DateTimeField(default=datetime.datetime.now)
@@ -85,7 +89,7 @@ class Blacklist(models.Model):
 class Log(models.Model):
     """
     A log used to record the activity of a queued message.
-    
+
     """
     message = models.ForeignKey(Message, editable=False)
     result = models.PositiveSmallIntegerField(choices=RESULT_CODES)
