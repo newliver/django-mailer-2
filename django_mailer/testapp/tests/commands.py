@@ -63,3 +63,18 @@ class TestCommands(MailerTestCase):
         self.assertEqual(non_deferred_messages.count(), 1)
         call_command('retry_deferred', verbosity='0', max_retries=3)
         self.assertEqual(non_deferred_messages.count(), 3)
+
+    def test_cleanup_mail(self):
+        """
+        The ``cleanup_mail`` command deletes mails older than a specified
+        amount of days
+        """
+        today = datetime.date.today()
+        self.assertEqual(models.Message.objects.count(), 0)
+        #new message (not to be deleted)
+        models.Message.objects.create()
+        prev = today - datetime.timedelta(31)
+        # new message (old)
+        models.Message.objects.create(date_created=prev)
+        call_command('cleanup_mail', days=30)
+        self.assertEqual(models.Message.objects.count(), 1)

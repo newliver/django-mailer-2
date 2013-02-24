@@ -1,3 +1,7 @@
+#!/usr/bin/env python
+# encoding: utf-8
+# ----------------------------------------------------------------------------
+
 PRIORITY_EMAIL_NOW = 0
 PRIORITY_HIGH = 1
 PRIORITY_NORMAL = 3

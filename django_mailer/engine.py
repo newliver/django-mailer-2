@@ -1,3 +1,7 @@
+#!/usr/bin/env python
+# encoding: utf-8
+# ----------------------------------------------------------------------------
+
 """
 The "engine room" of django mailer.
 

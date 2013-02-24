@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# encoding: utf-8
+# ----------------------------------------------------------------------------
 
 """
 lockfile.py - Platform-independent advisory file locks.
@@ -69,6 +72,7 @@ __all__ = ['Error', 'LockError', 'LockTimeout', 'AlreadyLocked',
            'LockFailed', 'UnlockError', 'NotLocked', 'NotMyLock',
            'LinkFileLock', 'MkdirFileLock', 'SQLiteFileLock']
 
+
 class Error(Exception):
     """
     Base class for other exceptions.
@@ -79,6 +83,7 @@ class Error(Exception):
     ...   pass
     """
     pass
+
 
 class LockError(Error):
     """
@@ -91,6 +96,7 @@ class LockError(Error):
     """
     pass
 
+
 class LockTimeout(LockError):
     """Raised when lock creation fails within a user-defined period of time.
 
@@ -100,6 +106,7 @@ class LockTimeout(LockError):
     ...   pass
     """
     pass
+
 
 class AlreadyLocked(LockError):
     """Some other thread/process is locking the file.
@@ -111,6 +118,7 @@ class AlreadyLocked(LockError):
     """
     pass
 
+
 class LockFailed(LockError):
     """Lock file creation failed for some other reason.
 
@@ -120,6 +128,7 @@ class LockFailed(LockError):
     ...   pass
     """
     pass
+
 
 class UnlockError(Error):
     """
@@ -132,6 +141,7 @@ class UnlockError(Error):
     """
     pass
 
+
 class NotLocked(UnlockError):
     """Raised when an attempt is made to unlock an unlocked file.
 
@@ -142,6 +152,7 @@ class NotLocked(UnlockError):
     """
     pass
 
+
 class NotMyLock(UnlockError):
     """Raised when an attempt is made to unlock a file someone else locked.
 
@@ -151,6 +162,7 @@ class NotMyLock(UnlockError):
     ...   pass
     """
     pass
+
 
 class LockBase:
     """Base class for platform-specific lock classes."""
@@ -229,6 +241,7 @@ class LockBase:
         """
         self.release()
 
+
 class LinkFileLock(LockBase):
     """Lock access to a file using atomic property of link(2)."""
 
@@ -285,6 +298,7 @@ class LinkFileLock(LockBase):
     def break_lock(self):
         if os.path.exists(self.lock_file):
             os.unlink(self.lock_file)
+
 
 class MkdirFileLock(LockBase):
     """Lock file by creating a directory."""
@@ -360,6 +374,7 @@ class MkdirFileLock(LockBase):
                 os.unlink(os.path.join(self.lock_file, name))
             os.rmdir(self.lock_file)
 
+
 class SQLiteFileLock(LockBase):
     "Demonstration of using same SQL-based locking."
 
@@ -376,7 +391,7 @@ class SQLiteFileLock(LockBase):
 
         import sqlite3
         self.connection = sqlite3.connect(SQLiteFileLock.testdb)
-        
+
         c = self.connection.cursor()
         try:
             c.execute("create table locks"
@@ -438,7 +453,7 @@ class SQLiteFileLock(LockBase):
                 if len(rows) == 1:
                     # We're the locker, so go home.
                     return
-                    
+
             # Maybe we should wait a bit longer.
             if timeout is not None and time.time() > end_time:
                 if timeout > 0:
@@ -468,7 +483,7 @@ class SQLiteFileLock(LockBase):
                        "  where lock_file = ?",
                        (self.lock_file,))
         return cursor.fetchone()[0]
-        
+
     def is_locked(self):
         cursor = self.connection.cursor()
         cursor.execute("select * from locks"
