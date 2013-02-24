@@ -1,2 +1,3 @@
 django
 pyzmail
+#and django_mailer2 of course
