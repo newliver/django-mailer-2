@@ -1,6 +1,7 @@
-django-mailer-2 by Chris Beaven (a fork of James Tauber's django-mailer)
+django-mailer-2 by APSL is a Chris Beaven form from a fork of 
+James Tauber's django-mailer.
 
-A reusable Django app for queuing the sending of email
+A reusable Django app for queuing the sending of email.
 
 Execute runtests.py to run the test. You'll need a working mail server 
 or just 

@@ -12,8 +12,19 @@ from mail_utils import get_attachments, get_attachment
 
 
 class MailListView(ListView):
+    """
+    Displays the mail list
+    """
+
     model = Message
     paginate_by = 10
+
+    def get_queryset(self):
+        """
+        Sort the emails in reverse order
+        """
+        return super(MailListView, self).get_queryset().order_by('-id')
+
 
 class MailDetailView(DetailView):
     model = Message
@@ -35,6 +46,12 @@ class MailDetailView(DetailView):
 
 
 class MailHtmlDetailView(DetailView):
+    """
+    Shows just the HTML mail for a message, so we can use it to diplay the
+    message in an iframe and avoid style classhes with the original
+    content.
+    """
+
     model = Message
     template_name = 'django_mailer/html_detail.html'
 

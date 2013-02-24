@@ -1,13 +1,14 @@
 {% extends "base.html" %}
 {% block content %}
-    <h1>Message List</h1>
- <table border="1">
+<h1>Message List</h1>
+<table border="1">
+  <tr><th>id</th><th>From</th><th>To</th><th>Subject</th><th>Created</th></tr>
     {% for mail in object_list %}
     <tr>
-      <td><a href="{% url mail_detail mail.pk %}">{{mail.pk}}</a><td/>
+          <td><a href="{% url mail_detail mail.pk %}">{{mail.pk}}</a></td>
           <td>{{mail.from_address}}</td>
           <td>{{mail.to_address}}</td>
-          <td>{{mail.subject}}<td/>
+          <td>{{mail.subject}}</td>
           <td>{{mail.date_created}}</td>
     </tr>
     {% endfor %}
