@@ -4,14 +4,16 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 admin.autodiscover()
 
+from demo.views import MailListView, MailDetailView, DownloadView
+
 urlpatterns = patterns('',
     # Examples:
-    # url(r'^$', 'demo.views.home', name='home'),
-    # url(r'^demo/', include('demo.foo.urls')),
-
-    # Uncomment the admin/doc line below to enable admin documentation:
-    # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
-
+    url(r'^$', MailListView.as_view(), name='home'),
+    url(r'^mail/(?P<pk>\d+)/$', MailDetailView.as_view(),
+        name='mail_detail'),
+    url('^mail/attachment/(?P<pk>\d+)/(?P<firma>[0-9a-f]{32})/$',
+        DownloadView.as_view(),
+        name="mail_download"),
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
 )
