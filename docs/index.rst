@@ -57,3 +57,6 @@ Credit
 At the time of the fork, the primary authors of django-mailer were James Tauber
 and Brian Rosner. The additional contributors included Michael Trier, Doug
 Napoleone and Jannis Leidel.
+
+
+
