@@ -7,3 +7,5 @@ Execute runtests.py to run the test. You'll need a working mail server
 or just 
 
 python -m smtpd -n -c DebuggingServer localhost:1025
+
+Find documentation about configuration an use on: https://django-mailer2.readthedocs.org/en/latest/
