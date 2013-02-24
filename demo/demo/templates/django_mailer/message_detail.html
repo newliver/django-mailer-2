@@ -9,7 +9,8 @@
   {{parts}}
     {% if msg_html %}
       <h2>HTML</h2>
-      {{msg_html|safe}}
+      <iframe src="{% url mail_html object.pk %}" width="800" height="600">
+      </iframe>
     {% endif %}
     {% if msg_text %}
       <h2>Text</h2>

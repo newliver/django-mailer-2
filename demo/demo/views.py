@@ -34,6 +34,19 @@ class MailDetailView(DetailView):
         return context
 
 
+class MailHtmlDetailView(DetailView):
+    model = Message
+    template_name = 'django_mailer/html_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(MailHtmlDetailView, self).get_context_data(**kwargs)
+        payload_str = self.object.encoded_message.encode('utf-8')
+        msg = message_from_string(payload_str)
+        msg_html = msg.html_part.get_payload() if msg.html_part else None
+        context['msg_html'] = msg_html
+        return context
+
+
 class DownloadView(View):
     """
     Given a Message and an attachment signature returns the file

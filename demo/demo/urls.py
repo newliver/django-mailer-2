@@ -5,6 +5,7 @@ from django.contrib import admin
 admin.autodiscover()
 
 from demo.views import MailListView, MailDetailView, DownloadView
+from demo.views import MailHtmlDetailView
 
 urlpatterns = patterns('',
     # Examples:
@@ -14,6 +15,9 @@ urlpatterns = patterns('',
     url('^mail/attachment/(?P<pk>\d+)/(?P<firma>[0-9a-f]{32})/$',
         DownloadView.as_view(),
         name="mail_download"),
+    url('^mail/html/(?P<pk>\d+)/$',
+        MailHtmlDetailView.as_view(),
+        name="mail_html"),
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
 )
