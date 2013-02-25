@@ -19,5 +19,6 @@ urlpatterns = patterns('',
         MailHtmlDetailView.as_view(),
         name="mail_html"),
     # Uncomment the next line to enable the admin:
+    (r'^accounts/login/$', 'django.contrib.auth.views.login'),
     url(r'^admin/', include(admin.site.urls)),
 )
