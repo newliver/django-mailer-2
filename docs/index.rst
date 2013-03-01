@@ -17,7 +17,13 @@ Contents:
 Django Mailer fork
 ==================
 
-django-mailer-2 is a fork of James Tauber's `django-mailer`__.
+django-mailer-2 is a fork form Chris Beaven fort to of James Tauber's 
+`django-mailer`.__
+
+This document is readthedocs version of the fork that Chris and James made 
+the original document with some additional information.
+
+comments.
 
 .. __: http://github.com/jtauber/django-mailer
 
@@ -37,6 +43,11 @@ technically live side by side in harmony. One of the motivations in doing this
 was to make the transition simpler for projects which are using django-mailer
 (or to transition back, if someone doesn't like this one).
 
+I made an additional fork as I need to correct some bugs related to unicode
+mail and add some interesting patches as the one which allows you to remove
+mails.
+
+
 Differences
 -----------
 
@@ -51,6 +62,20 @@ Some of the larger differences in django-mailer-2:
 * It provides a hook to override (aka "monkey patch") the Django ``send_mail``,
   ``mail_admins`` and ``mail_manager`` functions.
 
+* Added a management command to remove old e-mails, so the database does not
+  increase so much.
+
+* Added a new testing procedure, so you can run the tests without having to
+  install and configure a Django application.
+
+* Added some cron templates ein `bin` folder to help you to configure the
+  cron.
+
+* Improved admin configuration.
+
+* Added a demo project, which shows how we can retrieve an email stored in
+  the database and shows django-mailer in the admin.
+
 Credit
 ------
 
@@ -58,5 +83,6 @@ At the time of the fork, the primary authors of django-mailer were James Tauber
 and Brian Rosner. The additional contributors included Michael Trier, Doug
 Napoleone and Jannis Leidel.
 
+Original branch and the django-mailer-2 hard work comes from Chris Beaven.
 
 
