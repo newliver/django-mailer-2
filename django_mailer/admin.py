@@ -5,7 +5,8 @@ from django_mailer import models
 class Message(admin.ModelAdmin):
     list_display = ('from_address', 'to_address', 'subject', 'date_created')
     list_filter = ('date_created',)
-    search_fields = ('to_address', 'subject', 'from_address', 'encoded_message',)
+    search_fields = ('to_address', 'subject', 'from_address',
+        'encoded_message',)
     date_hierarchy = 'date_created'
     ordering = ('-date_created',)
 
@@ -19,7 +20,7 @@ class MessageRelatedModelAdmin(admin.ModelAdmin):
 
     def message__from_address(self, obj):
         return obj.message.from_address
-    message__from_address.admin_order_field='message__from_address'
+    message__from_address.admin_order_field = 'message__from_address'
 
     def message__subject(self, obj):
         return obj.message.subject
@@ -36,9 +37,9 @@ class QueuedMessage(MessageRelatedModelAdmin):
     not_deferred.boolean = True
     not_deferred.admin_order_field = 'deferred'
 
-    list_display = ('id', 'message', 'message__to_address', 'message__from_address',
-                    'message__subject',
-                    'message__date_created', 'priority', 'not_deferred')
+    list_display = ('id', 'message', 'message__to_address',
+            'message__from_address', 'message__subject',
+            'message__date_created', 'priority', 'not_deferred')
 
 
 class Blacklist(admin.ModelAdmin):
