@@ -5,7 +5,6 @@
 from setuptools import setup
 from django_mailer import get_version
 
-
 setup(
     name='django-mailer-2',
     version=get_version(),
@@ -15,6 +14,7 @@ setup(
     author='Antoni Aloy',
     author_email='antoni.aloy@gmail.com',
     url='http://github.com/APSL/django-mailer-2',
+    install_requires = ["pyzmail", ],
     packages=[
         'django_mailer',
         'django_mailer.management',
