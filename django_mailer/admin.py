@@ -4,7 +4,10 @@
 
 from django.contrib import admin
 from django_mailer import models
-from django.conf.urls import patterns, url
+try:
+    from django.conf.urls import patterns, url
+except ImportError:
+    from django.conf.urls.defaults import *
 from mail_utils import get_attachments, get_attachment
 from pyzmail.parse import message_from_string
 from django.shortcuts import render
