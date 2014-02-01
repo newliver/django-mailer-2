@@ -60,10 +60,10 @@ or all managers as defined in the ``MANAGERS`` setting by calling::
     mail_managers(subject, message_body)
 
 
-Clear Queue With Command Extensions
+Command Extensions
 ===================================
 
-With mailer in your INSTALLED_APPS, there will be two new manage.py commands
+With mailer in your INSTALLED_APPS, there will be four new manage.py commands
 you can run:
 
  * ``send_mail`` will clear the current message queue. If there are any
@@ -78,7 +78,7 @@ you can run:
 
  * ``status_mail`` the intent of this commant is to allow systems as nagios to
     be able to ask the queue about its status. It returns as string with than
-    can be parses as (?P<queued>\d+)/(?P<deferred>\d+)/(?P<seconds>\d+)
+    can be parses as ``(?P<queued>\d+)/(?P<deferred>\d+)/(?P<seconds>\d+)``
 
 You may want to set these up via cron to run regularly::
 
