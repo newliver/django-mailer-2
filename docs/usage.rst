@@ -76,6 +76,10 @@ you can run:
  * ``cleanup_mail`` will delete mails created before an X number of days
    (defaults to 90).
 
+ * ``status_mail`` the intent of this commant is to allow systems as nagios to
+    be able to ask the queue about its status. It returns as string with than
+    can be parses as (?P<queued>\d+)/(?P<deferred>\d+)/(?P<seconds>\d+)
+
 You may want to set these up via cron to run regularly::
 
     * * * * * (cd $PROJECT; python manage.py send_mail >> $PROJECT/cron_mail.log 2>&1)

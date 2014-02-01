@@ -30,7 +30,7 @@ class Command(NoArgsCommand):
         # If this is just a count request the just calculate, report and exit.
         if count:
             queued = models.QueuedMessage.objects.non_deferred().count()
-            deferred = models.QueuedMessage.objects.non_deferred().count()
+            deferred = models.QueuedMessage.objects.deferred().count()
             sys.stdout.write('%s queued message%s (and %s deferred message%s).'
                              '\n' % (queued, queued != 1 and 's' or '',
                                      deferred, deferred != 1 and 's' or ''))
