@@ -64,6 +64,42 @@ class TestCommands(MailerTestCase):
         call_command('retry_deferred', verbosity='0', max_retries=3)
         self.assertEqual(non_deferred_messages.count(), 3)
 
+    def test_status_mail(self):
+        """
+        The ``status_mail`` should return a string that matches:
+            (?P<queued>\d+)/(?P<deferred>\d+)/(?P<seconds>\d+)
+        """
+        import re
+        import sys
+        from cStringIO import StringIO
+        import time
+
+        re_string  = r"(?P<queued>\d+)/(?P<deferred>\d+)/(?P<seconds>\d+)"
+        p = re.compile(re_string)
+
+        self.queue_message(subject="test")
+        self.queue_message(subject='deferred')
+        self.queue_message(subject='deferred 2')
+        self.queue_message(subject='deferred 3')
+        models.QueuedMessage.objects\
+                    .filter(message__subject__startswith='deferred')\
+                    .update(deferred=datetime.datetime.now())
+        non_deferred_messages = models.QueuedMessage.objects.non_deferred()
+        time.sleep(1)
+        # Deferred messages are returned to the queue (nothing is sent).
+        out, sys.stdout = sys.stdout, StringIO()
+        with self.assertRaises(SystemExit) as cm:
+            call_command('status_mail', verbosity='0')
+        sys.stdout.seek(0)
+        result = sys.stdout.read()
+        m = p.match(result)
+        sys.stdout = out
+        self.assertTrue(m, "Output does not include expected r.e.")
+        v = m.groupdict()
+        self.assertTrue(v['queued'], "1")
+        self.assertEqual(v['deferred'], "3")
+        self.assertTrue(int(v['seconds'])>=1)
+
     def test_cleanup_mail(self):
         """
         The ``cleanup_mail`` command deletes mails older than a specified

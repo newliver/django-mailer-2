@@ -104,7 +104,7 @@ class TestBackend(MailerTestCase):
         """
         from django.core.management import call_command
         msg = mail.EmailMessage(subject=u'á subject', body='body',
-                        from_email=u'juan.lópez@abc.com', to=['únñac@abc.com'],
+                        from_email=u'juan.lópez@abc.com', to=[u'únñac@abc.com'],
                         headers={'X-Mail-Queue-Priority': 'now'})
         self.send_message(msg)
         queued_messages = models.QueuedMessage.objects.all()
