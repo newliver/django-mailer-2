@@ -12,6 +12,8 @@ from mail_utils import get_attachments, get_attachment
 from pyzmail.parse import message_from_string
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.core.urlresolvers import reverse
+
 
 class Message(admin.ModelAdmin):
     list_display = ('from_address', 'to_address', 'subject', 'date_created')
@@ -98,7 +100,13 @@ class QueuedMessage(MessageRelatedModelAdmin):
     not_deferred.boolean = True
     not_deferred.admin_order_field = 'deferred'
 
-    list_display = ('id', 'message', 'message__to_address',
+    def message_link(self, obj):
+        url = reverse('admin:mail_detail', args=(obj.message.id,))
+        return """<a href="%s" onclick="return showAddAnotherPopup(this);">%s</a>""" % (url, obj.message)
+    message_link.allow_tags = True
+    message_link.short_description = u'Message'
+
+    list_display = ('id', 'message_link', 'message__to_address',
             'message__from_address', 'message__subject',
             'message__date_created', 'priority', 'not_deferred')
 
@@ -108,8 +116,14 @@ class Blacklist(admin.ModelAdmin):
 
 
 class Log(MessageRelatedModelAdmin):
+    def message_link(self, obj):
+        url = reverse('admin:mail_detail', args=(obj.message.id,))
+        return """<a href="%s" onclick="return showAddAnotherPopup(this);">show</a>""" % url
+    message_link.allow_tags = True
+    message_link.short_description = u'Message'
+
     list_display = ('id', 'result', 'message__to_address', 'message__subject',
-                    'date')
+                    'date', 'message_link')
     list_filter = ('result',)
     list_display_links = ('id', 'result')
 
