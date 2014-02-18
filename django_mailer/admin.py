@@ -16,7 +16,13 @@ from django.core.urlresolvers import reverse
 
 
 class Message(admin.ModelAdmin):
-    list_display = ('from_address', 'to_address', 'subject', 'date_created')
+    def message_link(self, obj):
+        url = reverse('admin:mail_detail', args=(obj.id,))
+        return """<a href="%s" onclick="return showAddAnotherPopup(this);">show</a>""" % url
+    message_link.allow_tags = True
+    message_link.short_description = u'Show'
+
+    list_display = ('from_address', 'to_address', 'subject', 'date_created', 'message_link')
     list_filter = ('date_created',)
     search_fields = ('to_address', 'subject', 'from_address',
             'encoded_message',)
