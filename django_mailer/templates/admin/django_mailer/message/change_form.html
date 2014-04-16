@@ -1,9 +1,6 @@
 {% extends "admin/change_form.html" %}
 {% load i18n admin_urls %}
 {% load url from future %}
-<<<<<<< HEAD:django_mailer/templates/admin/django_mailer/message/change_form.html
-{% block object-tools-items %}<li><a href="{% url 'admin:mail_detail' object_id %}" onclick="return showAddAnotherPopup(this);">show</a></li>{{block.super}}{% endblock %}
-=======
 
 {% block object-tools-items %}
 <li>
@@ -16,5 +13,4 @@
   </span>
 {{block.super}}
 </li>{% endblock %}
->>>>>>> e68d906... Compatibilidad con yawd admin:django_mailer/templates/admin/django_mailer/change_form.html
 
