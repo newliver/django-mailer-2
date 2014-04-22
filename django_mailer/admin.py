@@ -18,7 +18,7 @@ from django.core.urlresolvers import reverse
 class Message(admin.ModelAdmin):
     def message_link(self, obj):
         url = reverse('admin:mail_detail', args=(obj.id,))
-        return """<a href="%s" onclick="return showAddAnotherPopup(this);">show</a>""" % url
+        return """<a href="%s" class="add-another" onclick="return showAddAnotherPopup(this);">show</a>""" % url
     message_link.allow_tags = True
     message_link.short_description = u'Show'
 
@@ -108,7 +108,7 @@ class QueuedMessage(MessageRelatedModelAdmin):
 
     def message_link(self, obj):
         url = reverse('admin:mail_detail', args=(obj.message.id,))
-        return """<a href="%s" onclick="return showAddAnotherPopup(this);">%s</a>""" % (url, obj.message)
+        return """<a href="%s" class="add-another" onclick="return showAddAnotherPopup(this);">%s</a>""" % (url, obj.message)
     message_link.allow_tags = True
     message_link.short_description = u'Message'
 
@@ -124,7 +124,7 @@ class Blacklist(admin.ModelAdmin):
 class Log(MessageRelatedModelAdmin):
     def message_link(self, obj):
         url = reverse('admin:mail_detail', args=(obj.message.id,))
-        return """<a href="%s" onclick="return showAddAnotherPopup(this);">show</a>""" % url
+        return """<a href="%s" class="add-another" onclick="return showAddAnotherPopup(this);">show</a>""" % url
     message_link.allow_tags = True
     message_link.short_description = u'Message'
 
