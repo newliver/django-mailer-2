@@ -20,6 +20,7 @@ setup(
         'django_mailer.management',
         'django_mailer.management.commands',
     ],
+    include_package_data=True,
     classifiers=[
         'Development Status :: 4 - Beta',
         'Environment :: Web Environment',
