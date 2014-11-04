@@ -26,3 +26,5 @@ try:
 except ImportError:
     # Django version < 1.2
     EMAIL_BACKEND_SUPPORT = False
+
+MULTI_ACCOUNT_SUPPORT = False

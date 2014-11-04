@@ -50,6 +50,15 @@ def _message_queue(block_size):
         queue = get_block()
 
 
+def extract_from_address(raw_from_address):
+    import re
+    from_address = re.findall(r'<(.*)>', raw_from_address)
+    if from_address:
+        return from_address[0]
+    else:
+        return raw_from_address
+
+
 def send_all(block_size=500, backend=None):
     """
     Send all non-deferred messages in the queue.
@@ -62,8 +71,8 @@ def send_all(block_size=500, backend=None):
     of a large number of queued messages.
 
     """
+    connection = None
     lock = FileLock(LOCK_PATH)
-
     logger.debug("Acquiring lock...")
     try:
         # lockfile has a bug dealing with a negative LOCK_WAIT_TIMEOUT (which
@@ -84,13 +93,25 @@ def send_all(block_size=500, backend=None):
     sent = deferred = skipped = 0
 
     try:
-        if constants.EMAIL_BACKEND_SUPPORT:
-            connection = get_connection(backend=backend)
-        else:
-            connection = get_connection()
         blacklist = models.Blacklist.objects.values_list('email', flat=True)
-        connection.open()
+        if not settings.MULTI_ACCOUNT_SUPPORT:
+            if constants.EMAIL_BACKEND_SUPPORT:
+                connection = get_connection(backend=backend)
+            else:
+                connection = get_connection()
+            connection.open()
         for message in _message_queue(block_size):
+            if settings.MULTI_ACCOUNT_SUPPORT:
+                from_address = extract_from_address(message.message.from_address)
+                try:
+                    email = models.Email.objects.get(host_user=from_address)
+                    connection = get_connection(username=email.host_user,
+                                                password=email.host_password,
+                                                fail_silently=False)
+                    connection.open()
+                except models.Email.DoesNotExist:
+                    logger.error("email: %s does not exist." % from_address)
+                    break
             result = send_queued_message(message, smtp_connection=connection,
                                   blacklist=blacklist)
             if result == constants.RESULT_SENT:
@@ -99,7 +120,8 @@ def send_all(block_size=500, backend=None):
                 deferred += 1
             elif result == constants.RESULT_SKIPPED:
                 skipped += 1
-        connection.close()
+        if connection:
+            connection.close()
     finally:
         logger.debug("Releasing lock...")
         lock.release()

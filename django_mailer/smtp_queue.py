@@ -1,9 +1,10 @@
 """Queued SMTP email backend class."""
 
-from django.core.mail.backends.base import BaseEmailBackend
+# from django.core.mail.backends.base import BaseEmailBackend
+from django.core.mail.backends.smtp import EmailBackend as Django_EmailBackend
 
 
-class EmailBackend(BaseEmailBackend):
+class EmailBackend(Django_EmailBackend):
     '''
     A wrapper that manages a queued SMTP system.
 

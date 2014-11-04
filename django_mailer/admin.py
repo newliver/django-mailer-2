@@ -134,7 +134,14 @@ class Log(MessageRelatedModelAdmin):
     list_display_links = ('id', 'result')
 
 
+class Email(admin.ModelAdmin):
+    list_display = ('id', 'host_user', 'default_from_email', 'block_size', 'send_count_today',
+                    'enabled', 'date_created', 'date_updated')
+    list_filter = ('host_user',)
+
+
 admin.site.register(models.Message, Message)
 admin.site.register(models.QueuedMessage, QueuedMessage)
 admin.site.register(models.Blacklist, Blacklist)
 admin.site.register(models.Log, Log)
+admin.site.register(models.Email, Email)

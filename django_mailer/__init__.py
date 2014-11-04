@@ -20,7 +20,7 @@ def get_version():
 
 def send_mail(subject, message, from_email, recipient_list,
               fail_silently=False, auth_user=None, auth_password=None,
-              priority=None):
+              priority=None, connection=None):
     """
     Add a new message to the mail queue.
 
@@ -36,8 +36,8 @@ def send_mail(subject, message, from_email, recipient_list,
 
     subject = force_unicode(subject)
     email_message = EmailMessage(subject, message, from_email,
-                                 recipient_list)
-    queue_email_message(email_message, priority=priority)
+                                 recipient_list, connection=connection)
+    queue_email_message(email_message, priority=priority, connection=connection)
 
 
 def mail_admins(subject, message, fail_silently=False, priority=None):
@@ -53,7 +53,7 @@ def mail_admins(subject, message, fail_silently=False, priority=None):
     """
     from django.conf import settings as django_settings
     from django.utils.encoding import force_unicode
-    from django_mailer import settings
+    from django_mailer import constants, settings
 
     if priority is None:
         settings.MAIL_ADMINS_PRIORITY
@@ -88,7 +88,7 @@ def mail_managers(subject, message, fail_silently=False, priority=None):
     send_mail(subject, message, from_email, recipient_list, priority=priority)
 
 
-def queue_email_message(email_message, fail_silently=False, priority=None):
+def queue_email_message(email_message, fail_silently=False, priority=None, connection=None):
     """
     Add new messages to the email queue.
 
@@ -113,7 +113,7 @@ def queue_email_message(email_message, fail_silently=False, priority=None):
         if constants.EMAIL_BACKEND_SUPPORT:
             from django.core.mail import get_connection
             from django_mailer.engine import send_message
-            connection = get_connection(backend=settings.USE_BACKEND)
+            connection = connection or get_connection(backend=settings.USE_BACKEND)
             result = send_message(email_message, smtp_connection=connection)
             return (result == constants.RESULT_SENT)
         else:

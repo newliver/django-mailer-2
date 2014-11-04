@@ -98,3 +98,48 @@ class Log(models.Model):
 
     class Meta:
         ordering = ('-date',)
+
+
+class EmailManager(models.Manager):
+
+    def get_available_email(self):
+        enabled_email = self.get_query_set().filter(enabled=1)
+        today = datetime.date.today()
+        for email in enabled_email:
+            msg = Message.objects.filter(from_address__contains=email.host_user,
+                                         date_created__contains=today)
+            if email.block_size > msg.count():
+                return email
+
+
+class Email(models.Model):
+
+    """
+    Multi email account support.
+    """
+
+    host_user = models.EmailField(max_length=200)
+    host_password = models.CharField(max_length=32)
+    default_from_email = models.EmailField(max_length=200)
+    email_host = models.CharField(max_length=200,
+                                  default='smtp.gmail.com')
+    email_port = models.IntegerField(default=587)
+    email_use_tls = models.BooleanField(default=True)
+    block_size = models.IntegerField(default=500)
+    enabled = models.SmallIntegerField(default=1)
+    date_created = models.DateTimeField(auto_now_add=True)
+    date_updated = models.DateTimeField(null=True, blank=True, auto_now=True)
+    objects = EmailManager()
+
+    def send_count_today(self):
+        today = datetime.date.today()
+        send_count = Message.objects.filter(from_address__contains=self.host_user,
+                                            date_created__contains=today).count()
+        return send_count
+
+    class Meta:
+        ordering = ('date_updated',)
+        unique_together = ('host_user',)
+
+    def __unicode__(self):
+        return '%s' % self.host_user

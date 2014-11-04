@@ -23,3 +23,7 @@ LOCK_WAIT_TIMEOUT = max(getattr(settings, "MAILER_LOCK_WAIT_TIMEOUT", 0), 0)
 # An optional alternate lock path, potentially useful if you have multiple
 # projects running on the same server.
 LOCK_PATH = getattr(settings, "MAILER_LOCK_PATH", None)
+
+# multi email account support.
+# you must add mail(mdoels) data.
+MULTI_ACCOUNT_SUPPORT = getattr(settings, "MULTI_ACCOUNT_SUPPORT", False)
