@@ -104,10 +104,11 @@ class EmailManager(models.Manager):
 
     def get_available_email(self):
         enabled_email = self.get_query_set().filter(enabled=1)
-        today = datetime.date.today()
+        today = datetime.datetime.today()
+        past_24_hours = today - datetime.timedelta(hours=24)
         for email in enabled_email:
             msg = Message.objects.filter(from_address__contains=email.host_user,
-                                         date_created__contains=today)
+                                         date_created__range=[past_24_hours, today])
             if email.block_size > msg.count():
                 return email
 
@@ -132,9 +133,10 @@ class Email(models.Model):
     objects = EmailManager()
 
     def send_count_today(self):
-        today = datetime.date.today()
+        today = datetime.datetime.today()
+        past_24_hours = today - datetime.timedelta(hours=24)
         send_count = Message.objects.filter(from_address__contains=self.host_user,
-                                            date_created__contains=today).count()
+                                            date_created__range=[past_24_hours, today]).count()
         return send_count
 
     class Meta:
